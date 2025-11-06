@@ -3,6 +3,20 @@ from discord.ext import commands
 from discord import ui
 import aiohttp
 from typing import Optional
+import os
+
+from aiohttp import web  
+
+async def handle(request):
+    return web.Response(text="Bot is running")
+
+app = web.Application()
+app.add_routes([web.get("/", handle)])
+
+import asyncio
+
+loop = asyncio.get_event_loop()
+loop.create_task(web._run_app(app, port=8080))
 
 # --- 기본 설정 ---
 intents = discord.Intents.default()
@@ -13,6 +27,7 @@ intents.voice_states = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 tree = bot.tree
 
+DISCORD_BOT_TOKEN = os.getenv("TOKEN") 
 UNLIMITED_LIMIT_TEXT = "무제한"
 session: Optional[aiohttp.ClientSession] = None
 
@@ -371,3 +386,4 @@ async def recruit_command(interaction: discord.Interaction, 게임: str):
 # 🚀 실행
 # -----------------------------------
 if __name__ == "__main__":
+    bot.run(DISCORD_BOT_TOKEN)
