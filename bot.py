@@ -15,8 +15,7 @@ app.add_routes([web.get("/", handle)])
 
 import asyncio
 
-loop = asyncio.get_event_loop()
-loop.create_task(web._run_app(app, port=8080))
+asyncio.create_task(web._run_app(app, port=8080))
 
 # --- 기본 설정 ---
 intents = discord.Intents.default()
