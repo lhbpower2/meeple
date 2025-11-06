@@ -270,29 +270,22 @@ class CancelRecruitButton(ui.Button):
         if interaction.message:
             await interaction.message.delete()
 
-        # 취소 안내 메시지
-        cancel_message = f"❌ **[{game_name}] 모집이 취소되었습니다.**\n{participants_mentions}"
-        await interaction.channel.send(cancel_message)
-
-        # 모집한눈에보기 임베드 수정
+                    # 모집한눈에보기 채널 글 삭제
         if hasattr(self.view, "summary_message_id"):
             guild = interaction.guild
             summary_id = summary_channel_id.get(guild.id)
-            if not summary_id:
-                return
-            summary_channel = guild.get_channel(summary_id)
-            if summary_channel:
-                try:
-                    summary_msg = await summary_channel.fetch_message(self.view.summary_message_id)
-                    new_embed = discord.Embed(
-                        title=f"❌ [{game_name}] 모집이 취소되었습니다.",
-                        description=f"이 모집은 취소되었습니다.\n(호스트: <@{self.host_id}>)",
-                        color=discord.Color.red()
-                    )
-                    await summary_msg.edit(embed=new_embed)
-                except discord.NotFound:
-                    pass
+            if summary_id:
+                summary_channel = guild.get_channel(summary_id)
+                if summary_channel:
+                    try:
+                        summary_msg = await summary_channel.fetch_message(self.view.summary_message_id)
+                        await summary_msg.delete()  # ❌ 삭제
+                    except discord.NotFound:
+                        pass
 
+        # 취소 안내 메시지
+        cancel_message = f"❌ **[{game_name}] 모집이 취소되었습니다.**\n{participants_mentions}"
+        await interaction.channel.send(cancel_message)
         self.view.stop()
 
 
