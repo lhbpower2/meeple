@@ -75,8 +75,8 @@ async def on_ready():
     print("✅ 슬래시 명령어 동기화 완료")
 
 async def setup_tasks():
-    bot.loop.create_task(start_web_server())  # Health Check 서버 실행
-    bot.loop.create_task(ping_self())         # Self Ping 실행
+    asyncio.create_task(start_web_server())
+    asyncio.create_task(ping_self())
 
 bot.setup_hook = setup_tasks
 # -----------------------------------
